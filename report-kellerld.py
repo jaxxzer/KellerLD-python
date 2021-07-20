@@ -3,8 +3,10 @@
 import argparse
 from fpdf import FPDF
 from llog import LLogReader
+import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from matplotlib.backends.backend_pdf import PdfPages
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 defaultMeta = dir_path+'/kellerld.meta'
@@ -26,7 +28,6 @@ plt.title('KellerLD Pressure + Temperature')
 plt.figure()
 log.data.ll.plot(['temperature', 'pressure'], ['temperature'])
 
-plt.show()
 
 
 pdf = FPDF()
@@ -72,11 +73,67 @@ def plot(df):
 
     pdf.image(tfile, w=epw)
     
+#https://stackoverflow.com/a/59574470
 
 table(log.rom, 'rom values')
 plot(log.data.pressure)
 plot(log.data.temperature)
 pdf.output('test.pdf')
+
+with PdfPages('test2.pdf') as pdf:
+    log.data.temperature.ll.plot()
+    pdf.savefig()
+    log.data.pressure.ll.plot()
+    pdf.savefig()
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
+    # ax.axis('tight')
+    # ax.axis('off')
+    # ax.table(cellText=[['title']], loc='bottom',
+    # bbox = [0,0,1.0, 0.1]
+    # )
+    # ax.axis('off')
+
+    log.rom.style.set_table_attributes("style='display:inline'").set_caption('Caption table')
+    # ax.table(cellText=log.rom.values, colLabels=log.rom.columns, loc='center')
+    # ax.set_ylabel('y')
+    # ax.set_xlabel('z')
+    t= ax.table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='upper center', cellLoc='center')
+    # t.auto_set_font_size(True)
+
+
+    # t = pd.plotting.table(ax, log.rom, colLabels=log.rom.columns, loc='upper left')
+    ax.set_title('hello')
+
+    # plt.show()
+    # t = pd.plotting.table(ax, log.data.iloc[:12 , :], rowLabels=[''])
+    # t.auto_set_font_size(False)
+    # t.set_fontsize(24)
+    # ax.axis('tight')
+    # plt.show()
+    pdf.savefig()
+
+    header = plt.table(cellText=[['']*2],
+                      colLabels=['Extra header 1', 'Extra header 2'],
+                      loc='bottom'
+                      )
+
+    # the_table = plt.table(cellText=cell_text,
+    #                   rowLabels=rows,
+    #                   rowColours=colors,
+    #                   colLabels=columns,
+    #                   loc='bottom',
+    #                   bbox=[0, -0.35, 1.0, 0.3]
+    #                   )
+    plt.show()
+
+fig, axs = plt.subplots(2, 1)
+
+axs[0].table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='upper center', cellLoc='center')
+log.data.pressure.ll.plot(axs[1])
+plt.show()
+
 
 # def table_helper(pdf, epw, th, table_data, col_num):
 #     for row in table_data:
