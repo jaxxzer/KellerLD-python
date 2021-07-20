@@ -128,13 +128,21 @@ with PdfPages('test2.pdf') as pdf:
     #                   )
     plt.show()
 
-fig, axs = plt.subplots(2, 1)
+# fig, axs = plt.subplots(2, 1, figsize=(8.5,11.0))
 
-axs[0].table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='upper center', cellLoc='center')
-log.data.pressure.ll.plot(axs[1])
+# axs[0].table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='upper center', cellLoc='center', fontsize=18)
+# log.data.pressure.ll.plot(axs[1])
+# plt.show()
+f = plt.figure(figsize=(8.5,11.0))
+ax = f.add_subplot(3, 1, 1)
+t = ax.table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='bottom', cellLoc='center', bbox=[0,0.5,1,0.5])
+t.auto_set_font_size(False)
+t.set_fontsize(12)
+ax.set_title("hello")
+
+ax = f.add_subplot(3, 1, (2,3))
+log.data.pressure.ll.plot(ax)
 plt.show()
-
-
 # def table_helper(pdf, epw, th, table_data, col_num):
 #     for row in table_data:
 #         maxwidth=0
