@@ -153,10 +153,14 @@ t.auto_set_font_size(False)
 t.set_fontsize(12)
 ax.set_title("hello")
 ax.axis('off')
-ax = f.add_subplot(spec[1:,:])
+ax = f.add_subplot(spec[1,0])
 log.data.pressure.ll.plot(ax)
+ax = f.add_subplot(spec[1,1])
 
+log.data.temperature.ll.plot(ax)
+ax = f.add_subplot(spec[2,:])
 
+log.data.ll.plot(['temperature', 'pressure'])
 plt.show()
 # def table_helper(pdf, epw, th, table_data, col_num):
 #     for row in table_data:
