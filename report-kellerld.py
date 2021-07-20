@@ -143,6 +143,21 @@ ax.set_title("hello")
 ax = f.add_subplot(3, 1, (2,3))
 log.data.pressure.ll.plot(ax)
 plt.show()
+
+f = plt.figure(figsize=(8.5,11.0))
+spec = f.add_gridspec(3, 2, height_ratios=[1,8,8])
+
+ax = f.add_subplot(spec[0,:])
+t = ax.table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='bottom', cellLoc='center', bbox=[0,0,1,1])
+t.auto_set_font_size(False)
+t.set_fontsize(12)
+ax.set_title("hello")
+ax.axis('off')
+ax = f.add_subplot(spec[1:,:])
+log.data.pressure.ll.plot(ax)
+
+
+plt.show()
 # def table_helper(pdf, epw, th, table_data, col_num):
 #     for row in table_data:
 #         maxwidth=0
