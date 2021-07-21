@@ -32,6 +32,7 @@ llOptional = {
 @pd.api.extensions.register_series_accessor("ll")
 class LLAxis:
     def __init__(self, pandas_obj):
+        print(f'LL: {pandas_obj.attrs}')
         self._obj = pandas_obj
         self.meta = self._obj.attrs['llMeta']
 
@@ -59,13 +60,27 @@ class LLAxis:
 @pd.api.extensions.register_dataframe_accessor("ll")
 class LLDataFrame:
     def __init__(self, pandas_obj):
+        print(f'DF: {pandas_obj["pressure"].attrs}')
         self._obj = pandas_obj
+        print(f'DF: {pandas_obj["pressure"].attrs}')
+        print(f'DF: {self._obj["pressure"].attrs}')
 
 
 
     def plot(self, **kwargs):
-        for c in self._obj:
-            self._obj[c].ll.plot(kwargs)
+        print(f'DFTIME: {self._obj["time"].attrs}')
+        for c, s in self._obj.iteritems():
+
+            # don't process these
+            if c in ['time', 'llType']:
+                continue
+
+            print(f'DF: {c}, {s.attrs}')
+            s.ll.plot(**kwargs)
+            # print(f'DF: {self._obj.pressure.attrs}')
+            # print(f'DF: {self._obj[c].attrs}')
+            # print(f'DF: {self._obj.pressure.attrs}')
+            # self._obj[c].ll.plot(kwargs)
 
 
 # @pd.api.extensions.register_dataframe_accessor("pdf")
