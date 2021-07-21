@@ -192,11 +192,28 @@ def llFig(height_ratios=[1, 8, 8, 1], columns=2, suptitle='hellotitle', footer='
     f.text(0.02, 0.02, footer, size=8)
 
 
-    plt.show()
     return f, spec
 
-    
-llFig()
+
+
+figure, spec = llFig()
+
+
+
+def table(df, spec, title=None):
+    # plot table
+    ax = plt.subplot(spec)
+    # ax = f.add_subplot(spec)
+    t = ax.table(cellText=df.to_numpy(dtype=str), colLabels=df.columns, loc='bottom', cellLoc='center', bbox=[0,0,1,1])
+    # t.auto_set_font_size(False)
+    # t.set_fontsize(12)
+    ax.set_title(title)
+    ax.axis('off')
+
+table(log.rom, spec[0,:], 'KellerLD Factory ROM Data')
+
+
+plt.show()
 
 # def pdf(name, figures):
     
