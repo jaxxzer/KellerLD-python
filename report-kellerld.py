@@ -22,13 +22,61 @@ log = LLogReader(args.input, args.meta)
 p = log.data.pressure
 t = log.data.temperature
 
-p.ll.pplot(t)
-plt.title('KellerLD Pressure + Temperature')
+# p.ll.pplot(t)
+# plt.title('KellerLD Pressure + Temperature')
 
-plt.figure()
-log.data.ll.plot(['temperature', 'pressure'], ['temperature'])
+# plt.figure()
+# log.data.ll.plot(['temperature', 'pressure'], ['temperature'])
 
 
+
+
+# def header(figure, spec):
+#     ax = f.add_subplot([0, ])
+
+def llFig(height_ratios=[1, 8, 8, 1], columns=2, suptitle='hellotitle', footer='llog\nv1.0', header='header1', pagenum=0):
+    f = plt.figure(figsize=(8.5, 11.0))
+    f.suptitle(suptitle)
+    rows = len(height_ratios)
+    spec = f.add_gridspec(rows, 2, height_ratios=height_ratios)
+    # f.text(0.99, 0.99, header, size=8, transform=f.transFigure)
+    f.text(0.98, 0.98, header, size=8, horizontalalignment='right', verticalalignment='bottom')
+    f.text(0.02, 0.02, footer, size=8)
+
+
+    return f, spec
+
+
+
+figure, spec = llFig()
+
+
+
+def table(df, spec, title=None):
+    # plot table
+    ax = plt.subplot(spec)
+    # ax = f.add_subplot(spec)
+    t = ax.table(cellText=df.to_numpy(dtype=str), colLabels=df.columns, loc='bottom', cellLoc='center', bbox=[0,0,1,1])
+    # t.auto_set_font_size(False)
+    # t.set_fontsize(12)
+    ax.set_title(title)
+    ax.axis('off')
+
+
+table(log.rom, spec[0,:], 'KellerLD Factory ROM Data')
+
+def plot(df, spec, title=None):
+    ax = plt.subplot(spec)
+    df.plot(ax = ax)
+
+plot(log.data, spec[1,:], 'KellerLD Measurement Data')
+
+plt.show()
+
+
+
+
+exit(0)
 
 pdf = FPDF()
 pdf.add_page()
@@ -42,13 +90,10 @@ def table(df, title):
         for r in df[c]:
             d = str(r)
             width = pdf.get_string_width(d)
-            print(c, d, width)
             if width > widths[c]:
-                print('upgrading')
                 widths[c] = width
 
     for key, value in widths.items():
-        print(key, value)
         widths[key] = value+2
     
     # total table width
@@ -176,7 +221,7 @@ with PdfPages('test3.pdf') as pdf:
 
 
     pdf.savefig()
-    plt.show()
+    #plt.show()
 
 
 # def header(figure, spec):
@@ -210,8 +255,14 @@ def table(df, spec, title=None):
     ax.set_title(title)
     ax.axis('off')
 
+
 table(log.rom, spec[0,:], 'KellerLD Factory ROM Data')
 
+def plot(df, spec, title=None):
+    ax = plt.subplot(spec)
+    df.plot()
+
+plot(log.data, spec[1,:], 'KellerLD Measurement Data')
 
 plt.show()
 
