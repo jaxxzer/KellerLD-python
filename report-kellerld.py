@@ -92,6 +92,7 @@ with PdfPages('test2.pdf') as pdf:
     # ax.axis('off')
     # ax.table(cellText=[['title']], loc='bottom',
     # bbox = [0,0,1.0, 0.1]
+
     # )
     # ax.axis('off')
 
@@ -126,7 +127,7 @@ with PdfPages('test2.pdf') as pdf:
     #                   loc='bottom',
     #                   bbox=[0, -0.35, 1.0, 0.3]
     #                   )
-    plt.show()
+    # plt.show()
 
 # fig, axs = plt.subplots(2, 1, figsize=(8.5,11.0))
 
@@ -134,6 +135,9 @@ with PdfPages('test2.pdf') as pdf:
 # log.data.pressure.ll.plot(axs[1])
 # plt.show()
 f = plt.figure(figsize=(8.5,11.0))
+
+
+
 ax = f.add_subplot(3, 1, 1)
 t = ax.table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='bottom', cellLoc='center', bbox=[0,0.5,1,0.5])
 t.auto_set_font_size(False)
@@ -142,27 +146,85 @@ ax.set_title("hello")
 
 ax = f.add_subplot(3, 1, (2,3))
 log.data.pressure.ll.plot(ax)
-plt.show()
+# plt.show()
 
 
 
-f = plt.figure(figsize=(8.5,11.0))
 
-f.suptitle('KellerLD Test Report')
-height_ratios=[1,8,8]
-spec = f.add_gridspec(len(height_ratios), 2, height_ratios=height_ratios)
 
-# plot table
-ax = f.add_subplot(spec[0,:])
-t = ax.table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='bottom', cellLoc='center', bbox=[0,0,1,1])
-t.auto_set_font_size(False)
-t.set_fontsize(12)
-ax.set_title("KellerLD ROM Configuration")
-ax.axis('off')
+with PdfPages('test3.pdf') as pdf:
+    f = plt.figure(figsize=(8.5,11.0))
+    f.suptitle('KellerLD Test Report')
+    height_ratios=[1,8,8,1]
+    spec = f.add_gridspec(len(height_ratios), 2, height_ratios=height_ratios)
 
-ax = f.add_subplot(spec[1:,:])
-log.data.ll.plot(['temperature'], ['pressure'])
-plt.show()
+
+    # plot table
+    ax = f.add_subplot(spec[0,:])
+    t = ax.table(cellText=log.rom.to_numpy(dtype=str), colLabels=log.rom.columns, loc='bottom', cellLoc='center', bbox=[0,0,1,1])
+    t.auto_set_font_size(False)
+    t.set_fontsize(12)
+    ax.set_title("KellerLD ROM Configuration")
+    ax.axis('off')
+
+    ax = f.add_subplot(spec[1:-1,:])
+    log.data.ll.plot(['temperature'], ['pressure'])
+
+    ax = f.add_subplot(spec[-1,:])
+    ax.text(0, 0, 'hello')
+    ax.axis('off')
+
+
+    pdf.savefig()
+    plt.show()
+
+
+# def header(figure, spec):
+#     ax = f.add_subplot([0, ])
+
+def llFig(height_ratios=[1, 8, 8, 1], columns=2, suptitle='hellotitle', footer='llog\nv1.0', header='header1', pagenum=0):
+    f = plt.figure(figsize=(8.5, 11.0))
+    f.suptitle(suptitle)
+    rows = len(height_ratios)
+    spec = f.add_gridspec(rows, 2, height_ratios=height_ratios)
+    # f.text(0.99, 0.99, header, size=8, transform=f.transFigure)
+    f.text(0.98, 0.98, header, size=8, horizontalalignment='right', verticalalignment='bottom')
+    f.text(0.02, 0.02, footer, size=8)
+
+
+    plt.show()
+    return f, spec
+
+    
+llFig()
+
+# def pdf(name, figures):
+    
+#     with PdfPages(name) as pdf:
+#         for f in figures:
+
+#         f = plt.figure(figsize=(8.5,11.0))
+#         f.suptitle('KellerLD Test Report')
+#         height_ratios=[1,8,8,1]
+#         spec = f.add_gridspec(len(height_ratios), 2, height_ratios=height_ratios)
+#         def pdf
+#         def header():
+#             ax = f.add_subplot(spec)
+#         def table(df, spec, title=None):
+#             # plot table
+#             ax = f.add_subplot(spec)
+#             t = ax.table(cellText=df.to_numpy(dtype=str), colLabels=df.columns, loc='bottom', cellLoc='center', bbox=[0,0,1,1])
+#             # t.auto_set_font_size(False)
+#             # t.set_fontsize(12)
+#             ax.set_title(title)
+#             ax.axis('off')
+
+
+
+#         table(log.rom, spec[0,:], 'test table')
+
+#         pdf.savefig()
+#         plt.show()
 # def table_helper(pdf, epw, th, table_data, col_num):
 #     for row in table_data:
 #         maxwidth=0
