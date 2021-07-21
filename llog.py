@@ -35,18 +35,14 @@ class LLAxis:
         self._obj = pandas_obj
         self.meta = self._obj.attrs['llMeta']
 
-    def plot(self, ax=None):
+    def plot(self, **kwargs):
         meta = self._obj.attrs['llMeta']
         name = meta['name']
         units = f' {meta["units"]}'
         color = f'{meta["color"]}'
         marker = f'{meta["marker"]}'
 
-        if ax is None:
-            ax = self._obj.plot(c=color, style=marker, markersize=2)
-        else:
-            ax = self._obj.plot(c=color, style=marker, markersize=2, secondary_y=True, mark_right=False, ax=ax)
-
+        ax = self._obj.plot(c=color, style=marker, markersize=2, **kwargs)
         ax.legend()
         ax.set_ylabel(f'{name}{units}')
         return ax
@@ -57,24 +53,20 @@ class LLAxis:
             y2.ll.plot(ax)
         return ax
 
+    def ppplot(self):
+        return self._obj
+
 @pd.api.extensions.register_dataframe_accessor("ll")
 class LLDataFrame:
     def __init__(self, pandas_obj):
         self._obj = pandas_obj
 
-    def plot(self, y1=None, y2=[]):
 
-        # if y1 is None:
-        #     for c in self._obj:
-        #         ax = self._obj[c].ll.plot()
-        # else:
-            # if y1 is None:
-            #     #plot the dataframe
-        for y in y1:
-            ax = self._obj[y].ll.plot()
-        for y in y2:
-            self._obj[y].ll.plot(ax=ax)
-        return ax
+
+    def plot(self, **kwargs):
+        for c in self._obj:
+            self._obj[c].ll.plot(kwargs)
+
 
 # @pd.api.extensions.register_dataframe_accessor("pdf")
 # class LLPdf:
@@ -115,7 +107,6 @@ class LLogReader:
                 # rename columns
                 for c in range(l):
                     i = c + 2
-                    print(f'renaming {i}, {columns[c]["name"]}')
                     name = columns[c]['name']
                     value.rename(columns={i: name}, inplace=True)
 
@@ -126,9 +117,7 @@ class LLogReader:
                         dtype = columns[c]['dtype']
                         print('dtype is', dtype, type(dtype), dtype=="int")
                         if dtype == "int":
-                            print('setting', name, dtype)
                             value[name] = value[name].astype(int)
-                            print('setting', name, dtype)
                         elif dtype == "float":
                             value[name] = value[name].astype(float)
                     except KeyError:
@@ -139,7 +128,6 @@ class LLogReader:
 
                 # attach metadata !! this must be done last
                 for c in range(l):
-                    print('setting meta', name, columns[c])
                     name = columns[c]['name']
                     value[name].attrs['llMeta'] = llOptional | columns[c]
 

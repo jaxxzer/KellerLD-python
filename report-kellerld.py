@@ -65,11 +65,23 @@ def table(df, spec, title=None):
 
 table(log.rom, spec[0,:], 'KellerLD Factory ROM Data')
 
-def plot(df, spec, title=None):
-    ax = plt.subplot(spec)
-    df.plot(ax = ax)
+# def plot(df, spec, title=None):
+#     ax = plt.subplot(spec)
+#     df.plot(ax = ax)
 
-plot(log.data, spec[1,:], 'KellerLD Measurement Data')
+# plot(log.data, spec[1,:], 'KellerLD Measurement Data')
+
+# log.data.pressure.att
+
+plt.subplot(spec[1,0])
+log.data.temperature.ll.plot()
+plt.subplot(spec[1,1])
+log.data.pressure.ll.plot()
+
+# plt.subplot(spec[2,:])
+# log.data.ll.plot()
+
+
 
 plt.show()
 
