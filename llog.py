@@ -5,12 +5,12 @@ import json
 import time
 
 LLOG_ERROR = '0'
-# read only memory + factory calibration and serialization type information
-LLOG_ROM = '1'
+# measurement data
+LLOG_DATA = '1'
 # application-specific configuration information
 LLOG_CONFIG = '2'
-# measurement data
-LLOG_DATA = '4'
+# read only memory + factory calibration and serialization type information
+LLOG_ROM = '4'
 # calibration data
 LLOG_CALIBRATION = '5'
 

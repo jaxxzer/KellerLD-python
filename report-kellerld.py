@@ -79,8 +79,14 @@ plt.subplot(spec[1,1])
 log.data.pressure.ll.plot()
 
 plt.subplot(spec[2,:])
+# log.data.ll.plot()
 log.data.ll.plot()
 
+# log.data[['pressure', 'temperature']].ll.plot()
+log.data.log[:, ['pressure', 'temperature']]
+z = log.data[['pressure', 'temperature']]
+print(z)
+z.ll.plot()
 
 
 plt.show()
